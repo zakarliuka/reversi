@@ -1,6 +1,12 @@
 import { Component, OnInit } from "@angular/core";
-import { FormControl, FormGroup } from "@angular/forms";
-import { isFieldValid, flipBoard, getScore, isGameOver } from "./logic";
+import { FormControl, FormGroup, Validators } from "@angular/forms";
+import {
+  isFieldValid,
+  flipBoard,
+  getScore,
+  isGameOver,
+  bestMove
+} from "./logic";
 
 export interface Point {
   x: number;
@@ -14,7 +20,9 @@ export interface Point {
 })
 export class AppComponent implements OnInit {
   player = -1;
-  ai = 1;
+  ai: -1 | 1 = 1;
+
+  depth: number = 2;
 
   cur: -1 | 1 = -1;
 
@@ -25,7 +33,8 @@ export class AppComponent implements OnInit {
   isGameOver = true;
 
   initPlayer = new FormGroup({
-    player: new FormControl(-1)
+    player: new FormControl(),
+    depth: new FormControl(2)
   });
 
   ngOnInit(): void {
@@ -44,15 +53,19 @@ export class AppComponent implements OnInit {
       [0, 0, 0, 0, 0, 0, 0, 0]
     ];
     this.cur = -1;
-    this.score = [0, 0];
+    this.score = [2, 2];
   }
 
   startGame() {
     this.player = +this.initPlayer.value["player"];
-    this.ai = this.player * -1;
+    this.ai = (this.player * -1) as -1 | 1;
     this.isGameOver = !this.isGameOver;
+    this.depth = Math.max(+this.initPlayer.value["depth"], 2);
     this.initPlayer.reset();
     this.initGame();
+
+    console.log(this.depth);
+    this.aiMove();
   }
 
   newGame() {
@@ -61,6 +74,21 @@ export class AppComponent implements OnInit {
     this.ai = -1;
   }
 
+  aiMove(): void {
+    if (this.cur === this.ai) {
+      let ai_pos: Point = bestMove(this.ai, this.depth, this.board);
+
+      if (ai_pos) {
+        this.board[ai_pos.x][ai_pos.y] = this.ai;
+        this.board = flipBoard(this.cur, ai_pos.x, ai_pos.y, this.board);
+
+        this.score = getScore(this.board);
+        this.cur = (this.cur * -1) as -1 | 1;
+      } else {
+        this.isGameOver = !this.isGameOver;
+      }
+    }
+  }
   onClickCell(pos: Point) {
     if (isFieldValid(this.cur, this.board, pos) && !this.isGameOver) {
       this.board[pos.x][pos.y] = this.cur;
@@ -72,6 +100,8 @@ export class AppComponent implements OnInit {
       this.cur = -this.cur as -1 | 1;
     }
 
+    this.isGameOver = isGameOver(this.cur, this.board);
+    this.aiMove();
     this.isGameOver = isGameOver(this.cur, this.board);
   }
 

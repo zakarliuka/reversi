@@ -1,5 +1,5 @@
 <h1>Reversi</h1>
-<h3 *ngIf="!isGameOver">
+<h3 *ngIf="!isGameOver || score[0] + score[1] > 5">
   Score
   <span class="black" [ngClass]="{ active: cur === -1 }">
     {{ names[0] }} : {{ score[0] }}</span
@@ -8,6 +8,7 @@
   <span [ngClass]="{ active: cur === 1 }">
     {{ names[1] }} : {{ score[1] }}
   </span>
+  Depth: {{ depth }}
 </h3>
 
 <div class="winner" *ngIf="isGameOver && score[0] + score[1] > 5">
@@ -26,12 +27,16 @@
 <div class="initBlock">
   <h3 *ngIf="isGameOver">Select color:</h3>
 
-  <form [formGroup]="initPlayer" *ngIf="isGameOver">
+  <form *ngIf="isGameOver" [formGroup]="initPlayer" (ngSubmit)="startGame()">
     <input type="radio" formControlName="player" value="1" /> White
     <input type="radio" formControlName="player" value="-1" /> Black
+
+    <div class="newline">
+      Depth: <input type="number" formControlName="depth" />
+    </div>
+    <button type="submit">Start Game</button>
   </form>
 
-  <button *ngIf="isGameOver" (click)="startGame()">Start Game</button>
   <button *ngIf="!isGameOver" (click)="newGame()">New Game</button>
 </div>
 

@@ -164,6 +164,88 @@ export function getScore(board: number[][]): [number, number] {
   return [black, white];
 }
 
+function minimax(
+  who: -1 | 1,
+  depth: number,
+  isMaximazing: boolean,
+  board: number[][]
+) {
+  let currentScore: [number, number] = getScore(board);
+  if (depth === 0 || isGameOver(who, board)) {
+    return currentScore[who === -1 ? 0 : 1];
+  }
+
+  let bestScore: number;
+  if (isMaximazing) {
+    bestScore = -Infinity;
+    const validMoves: number[][] = calcValidMoves(who, board);
+
+    for (let i = 0; i < 8; i++) {
+      for (let j = 0; j < 8; j++) {
+        //Is the spot available?
+        if (validMoves[i][j] !== 0) {
+          let newboard = board.map(arr => arr.slice());
+
+          newboard[i][j] = who;
+          newboard = flipBoard(who, i, j, newboard);
+
+          let score = minimax(who, depth - 1, false, newboard);
+
+          bestScore = Math.max(score, bestScore);
+        }
+      }
+    }
+    return bestScore;
+  } else {
+    bestScore = Infinity;
+    const validMoves: number[][] = calcValidMoves((who * -1) as -1 | 1, board);
+
+    for (let i = 0; i < 8; i++) {
+      for (let j = 0; j < 8; j++) {
+        //Is the spot available?
+        if (validMoves[i][j] !== 0) {
+          let newboard = board.map(arr => arr.slice());
+
+          newboard[i][j] = -who;
+          newboard = flipBoard(-who as -1 | 1, i, j, newboard);
+
+          let score = minimax(who, depth - 1, true, board);
+
+          bestScore = Math.min(score, bestScore);
+        }
+      }
+    }
+  }
+  return bestScore;
+}
+
+export function bestMove(who: -1 | 1, depth: number, board: number[][]): Point {
+  let bestScore = -Infinity;
+  let bestMove: Point;
+
+  let validMoves: number[][] = calcValidMoves(who, board);
+  for (let i = 0; i < 8; i++) {
+    for (let j = 0; j < 8; j++) {
+      //Is the spot available?
+      if (validMoves[i][j] !== 0) {
+        let newboard = board.map(arr => arr.slice());
+
+        newboard[i][j] = who;
+        newboard = flipBoard(who, i, j, newboard);
+
+        let score = minimax(who, depth, false, newboard);
+
+        if (score > bestScore) {
+          score = bestScore;
+          bestMove = { x: i, y: j };
+        }
+      }
+    }
+  }
+
+  return bestMove;
+}
+
 export function isGameOver(who: -1 | 1, board: number[][]): boolean {
   let count = 0;
 
