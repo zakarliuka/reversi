@@ -236,7 +236,7 @@ export function bestMove(who: -1 | 1, depth: number, board: number[][]): Point {
         let score = minimax(who, depth, false, newboard);
 
         if (score > bestScore) {
-          score = bestScore;
+          bestScore = score;
           bestMove = { x: i, y: j };
         }
       }

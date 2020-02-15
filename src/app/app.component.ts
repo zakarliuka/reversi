@@ -75,6 +75,7 @@ export class AppComponent implements OnInit {
   }
 
   aiMove(): void {
+    this.isGameOver = isGameOver(this.cur, this.board);
     if (this.cur === this.ai) {
       let ai_pos: Point = bestMove(this.ai, this.depth, this.board);
 
@@ -90,6 +91,7 @@ export class AppComponent implements OnInit {
     }
   }
   onClickCell(pos: Point) {
+    this.isGameOver = isGameOver(this.cur, this.board);
     if (isFieldValid(this.cur, this.board, pos) && !this.isGameOver) {
       this.board[pos.x][pos.y] = this.cur;
 
@@ -99,10 +101,7 @@ export class AppComponent implements OnInit {
 
       this.cur = -this.cur as -1 | 1;
     }
-
-    this.isGameOver = isGameOver(this.cur, this.board);
     this.aiMove();
-    this.isGameOver = isGameOver(this.cur, this.board);
   }
 
   get names(): [string, string] {
