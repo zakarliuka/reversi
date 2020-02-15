@@ -1,0 +1,52 @@
+<h1>Reversi</h1>
+<h3 *ngIf="!isGameOver">
+  Score
+  <span class="black" [ngClass]="{ active: cur === -1 }">
+    {{ names[0] }} : {{ score[0] }}</span
+  >
+  x
+  <span [ngClass]="{ active: cur === 1 }">
+    {{ names[1] }} : {{ score[1] }}
+  </span>
+</h3>
+
+<div class="winner" *ngIf="isGameOver && score[0] + score[1] > 5">
+  <ng-container *ngIf="score[0] > score[1]; else other">
+    The winner is {{ names[0] }}! 🎉🎉🎉
+  </ng-container>
+  <ng-template #other>
+    <ng-container *ngIf="score[0] < score[1]; else tie">
+      winner is {{ names[1] }}! 🎉🎉🎉</ng-container
+    >
+  </ng-template>
+  <ng-template #tie>
+    The game ended in a tie!
+  </ng-template>
+</div>
+<div class="initBlock">
+  <h3 *ngIf="isGameOver">Select color:</h3>
+
+  <form [formGroup]="initPlayer" *ngIf="isGameOver">
+    <input type="radio" formControlName="player" value="1" /> White
+    <input type="radio" formControlName="player" value="-1" /> Black
+  </form>
+
+  <button *ngIf="isGameOver" (click)="startGame()">Start Game</button>
+  <button *ngIf="!isGameOver" (click)="newGame()">New Game</button>
+</div>
+
+<div class="board">
+  <div class="row" *ngFor="let it of board[0]; let i = index">
+    <ng-container *ngFor="let jt of board[0]; let j = index">
+      <app-cell
+        [color]="(i % 2 === 0 && j % 2 !== 0) || (i % 2 !== 0 && j % 2 === 0)"
+        [isActive]="board[i][j]"
+        (click)="onClickCell({ x: i, y: j })"
+      ></app-cell>
+    </ng-container>
+  </div>
+</div>
+
+<footer>
+  Zakarliuka
+</footer>

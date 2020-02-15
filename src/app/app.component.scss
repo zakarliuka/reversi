@@ -1,0 +1,54 @@
+.board {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  flex-grow: 1;
+  align-items: center;
+}
+
+h1 {
+  display: inline;
+}
+
+h3 {
+  display: inline;
+}
+
+.initBlock {
+  text-align: center;
+}
+
+span {
+  border: 1px solid #fff;
+}
+
+span.black {
+  background-color: #000;
+  border-color: #000;
+  color: #fff;
+}
+
+span.active {
+  border-color: #98eaea;
+}
+
+button {
+  padding: 10px 15px;
+  margin: 10px;
+  text-transform: uppercase;
+  background: transparent;
+  border: 1px solid #98eaea;
+  border-radius: 5px;
+  transition: 0.2s ease-in;
+  cursor: pointer;
+  &:hover {
+    background-color: #ea9898;
+    color: #fff;
+  }
+}

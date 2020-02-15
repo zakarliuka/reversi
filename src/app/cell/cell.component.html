@@ -1,0 +1,9 @@
+<div class="cell" [class.grey]="color">
+  <div
+    class="chip"
+    [ngClass]="{
+      white: isActive === 1,
+      black: isActive === -1
+    }"
+  ></div>
+</div>
