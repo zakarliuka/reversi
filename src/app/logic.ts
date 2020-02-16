@@ -1,5 +1,16 @@
 import { Point } from "./app.component";
 
+const ScoreCoefs: number[][] = [
+  [16.16, -3.03, 0.99, 0.43, 0.43, 0.99, -3.03, 16.16],
+  [-4.12, -1.81, -0.08, -0.27, -0.27, -0.08, -1.81, -4.12],
+  [1.13, -0.04, 0.51, 0.07, 0.07, 0.51, -0.04, 1.13],
+  [0.63, -0.18, -0.04, -0.01, -0.01, -0.04, -0.18, 0.63],
+  [0.63, -0.18, -0.04, -0.01, -0.01, -0.04, -0.18, 0.63],
+  [1.13, -0.04, 0.51, 0.07, 0.07, 0.51, -0.04, 1.13],
+  [-4.12, -1.81, -0.08, -0.27, -0.27, -0.08, -1.81, -4.12],
+  [16.16, -3.03, 0.99, 0.43, 0.43, 0.99, -3.03, 16.16]
+];
+
 function checkLineMatch(
   who: -1 | 1,
   dr: number,
@@ -164,6 +175,19 @@ export function getScore(board: number[][]): [number, number] {
   return [black, white];
 }
 
+function countScore(who: -1 | 1, board: number[][]): number {
+  let score = 0;
+
+  for (let row = 0; row < 8; row++) {
+    for (let col = 0; col < 8; col++) {
+      if (board[row][col] === who) {
+        score += board[row][col] + ScoreCoefs[row][col];
+      }
+    }
+  }
+  return score;
+}
+
 function minimax(
   who: -1 | 1,
   depth: number,
@@ -172,9 +196,8 @@ function minimax(
   isMaximazing: boolean,
   board: number[][]
 ) {
-  let currentScore: [number, number] = getScore(board);
   if (depth === 0 || isGameOver(who, board)) {
-    return currentScore[who === -1 ? 0 : 1];
+    return countScore(who, board);
   }
 
   let bestScore: number;
