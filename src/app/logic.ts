@@ -65,7 +65,7 @@ function validMove(
   return checkLineMatch(who, dr, dc, r + dr + dr, c + dc + dc, board);
 }
 
-function calcValidMoves(who: -1 | 1, board: number[][]): number[][] {
+export function calcValidMoves(who: -1 | 1, board: number[][]): number[][] {
   let valid = [
     [0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0],

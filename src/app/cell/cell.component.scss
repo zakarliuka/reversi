@@ -19,7 +19,8 @@
 }
 
 .white,
-.black {
+.black,
+.validField {
   display: block;
   position: relative;
   width: 50px;
@@ -36,6 +37,15 @@
     width: 20px;
     height: 20px;
     border-radius: 50%;
+  }
+}
+
+.validField {
+  border: 2px solid #555;
+  background-color: #98eaea;
+  opacity: 0.2;
+  &::after {
+    border: 2px solid #555;
   }
 }
 

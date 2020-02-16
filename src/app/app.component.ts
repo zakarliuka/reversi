@@ -5,7 +5,8 @@ import {
   flipBoard,
   getScore,
   isGameOver,
-  bestMove
+  bestMove,
+  calcValidMoves
 } from "./logic";
 
 export interface Point {
@@ -19,7 +20,7 @@ export interface Point {
   styleUrls: ["./app.component.scss"]
 })
 export class AppComponent implements OnInit {
-  player = -1;
+  player: -1 | 1 = -1;
   ai: -1 | 1 = 1;
 
   depth: number = 2;
@@ -27,6 +28,8 @@ export class AppComponent implements OnInit {
   cur: -1 | 1 = -1;
 
   board: number[][];
+
+  validMoves: number[][];
 
   score: [number, number] = [0, 0];
 
@@ -42,6 +45,7 @@ export class AppComponent implements OnInit {
   }
 
   initGame() {
+    this.cur = -1;
     this.board = [
       [0, 0, 0, 0, 0, 0, 0, 0],
       [0, 0, 0, 0, 0, 0, 0, 0],
@@ -52,19 +56,18 @@ export class AppComponent implements OnInit {
       [0, 0, 0, 0, 0, 0, 0, 0],
       [0, 0, 0, 0, 0, 0, 0, 0]
     ];
-    this.cur = -1;
+
+    this.validMoves = calcValidMoves(this.player, this.board);
     this.score = [2, 2];
   }
 
   startGame() {
-    this.player = +this.initPlayer.value["player"];
+    this.player = +this.initPlayer.value["player"] as -1 | 1;
     this.ai = (this.player * -1) as -1 | 1;
     this.isGameOver = !this.isGameOver;
     this.depth = Math.max(+this.initPlayer.value["depth"], 2);
     this.initPlayer.reset();
     this.initGame();
-
-    console.log(this.depth);
     this.aiMove();
   }
 
@@ -84,7 +87,9 @@ export class AppComponent implements OnInit {
         this.board = flipBoard(this.cur, ai_pos.x, ai_pos.y, this.board);
 
         this.score = getScore(this.board);
-        this.cur = (this.cur * -1) as -1 | 1;
+        this.cur = -this.cur as -1 | 1;
+
+        this.validMoves = calcValidMoves(this.player, this.board);
       } else {
         this.isGameOver = !this.isGameOver;
       }

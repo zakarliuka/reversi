@@ -46,6 +46,7 @@
       <app-cell
         [color]="(i % 2 === 0 && j % 2 !== 0) || (i % 2 !== 0 && j % 2 === 0)"
         [isActive]="board[i][j]"
+        [isValidField]="validMoves[i][j] !== 0"
         (click)="onClickCell({ x: i, y: j })"
       ></app-cell>
     </ng-container>
