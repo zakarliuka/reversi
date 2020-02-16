@@ -167,6 +167,8 @@ export function getScore(board: number[][]): [number, number] {
 function minimax(
   who: -1 | 1,
   depth: number,
+  alpha: number,
+  beta: number,
   isMaximazing: boolean,
   board: number[][]
 ) {
@@ -189,9 +191,14 @@ function minimax(
           newboard[i][j] = who;
           newboard = flipBoard(who, i, j, newboard);
 
-          let score = minimax(who, depth - 1, false, newboard);
+          let score = minimax(who, depth - 1, alpha, beta, false, newboard);
 
           bestScore = Math.max(score, bestScore);
+          alpha = Math.max(alpha, score);
+
+          if (alpha <= beta) {
+            break;
+          }
         }
       }
     }
@@ -209,9 +216,14 @@ function minimax(
           newboard[i][j] = -who;
           newboard = flipBoard(-who as -1 | 1, i, j, newboard);
 
-          let score = minimax(who, depth - 1, true, board);
+          let score = minimax(who, depth - 1, alpha, beta, true, board);
 
           bestScore = Math.min(score, bestScore);
+          beta = Math.min(beta, score);
+
+          if (beta <= alpha) {
+            break;
+          }
         }
       }
     }
@@ -233,7 +245,7 @@ export function bestMove(who: -1 | 1, depth: number, board: number[][]): Point {
         newboard[i][j] = who;
         newboard = flipBoard(who, i, j, newboard);
 
-        let score = minimax(who, depth, false, newboard);
+        let score = minimax(who, depth, -Infinity, Infinity, false, newboard);
 
         if (score > bestScore) {
           bestScore = score;

@@ -102,6 +102,7 @@ export class AppComponent implements OnInit {
       this.cur = -this.cur as -1 | 1;
     }
     this.aiMove();
+    this.isGameOver = isGameOver(this.cur, this.board);
   }
 
   get names(): [string, string] {
