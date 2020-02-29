@@ -181,7 +181,7 @@ function countScore(who: -1 | 1, board: number[][]): number {
   for (let row = 0; row < 8; row++) {
     for (let col = 0; col < 8; col++) {
       if (board[row][col] === who) {
-        score += board[row][col] + ScoreCoefs[row][col];
+        score += board[row][col] * ScoreCoefs[row][col];
       }
     }
   }
